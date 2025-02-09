@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/ethanhonis/Documents/School/Spring25/345/proj1",
+      "program": "/Users/ethanhonis/Documents/School/Spring25/345/proj1/build/Debug/outDebug"
+    }
+  ]
+}
