@@ -1,23 +1,24 @@
-# Compiler
+
 CC = gcc
 
-# Compiler flags
-CFLAGS = -pthread -lm -Wall -Wextra -O2
+CFLAGS = -pthread -Wall -Wextra -O2
 
-# Executable name
-TARGET = thr_atomic
 
-# Source files
-SRC = thr_atomic.c
+TARGET_ATOMIC = thr_atomic
+TARGET_REDUCE = thr_reduce
 
-# Default target (build)
-all: $(TARGET)
+SRC_ATOMIC = thr_atomic.c
+SRC_REDUCE = thr_reduce.c
 
-# Build the program
-$(TARGET): $(SRC)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC) -lm
+all: $(TARGET_ATOMIC) $(TARGET_REDUCE)
+
+$(TARGET_ATOMIC): $(SRC_ATOMIC)
+	$(CC) $(CFLAGS) -o $(TARGET_ATOMIC) $(SRC_ATOMIC) -lm
+
+$(TARGET_REDUCE): $(SRC_REDUCE)
+	$(CC) $(CFLAGS) -o $(TARGET_REDUCE) $(SRC_REDUCE) -lm
 
 
 # Clean up build files
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET_ATOMIC) $(TARGET_REDUCE)
