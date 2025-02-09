@@ -8,7 +8,7 @@ int m, n;           // number of threads and total numbers to process
 double total = 0.0; // shared global sum
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-sem_t sem; // Semaphore for synchronization
+sem_t sem;
 int finished_threads = 0;
 
 typedef struct
@@ -18,7 +18,7 @@ typedef struct
     int end;   // ending number
 } thread_arg_t;
 
-void *thread_func(void *arg)
+void *calc(void *arg)
 {
     thread_arg_t *targ = (thread_arg_t *)arg;
     int tid = targ->tid;
@@ -32,16 +32,16 @@ void *thread_func(void *arg)
         partial += sqrt(i);
     }
 
-    // Print this thread's partial sum
+    // print this thread partial sum
     printf("thr %d: %.6f\n", tid, partial);
 
-    // Use a mutex lock instead of atomic operations
+    //lock 
     pthread_mutex_lock(&mutex);
     total += partial;
     finished_threads++;
     pthread_mutex_unlock(&mutex);
 
-    // Signal the main thread that this thread has finished
+    //signal the main thread that this thread finished
     sem_post(&sem);
 
     return NULL;
@@ -56,37 +56,37 @@ int main(int argc, char *argv[])
     // Get the different chunks for the threads
     int chunk = n / m;
 
-    // Initialize the semaphore to 0
+    // initialize the sem to 0
     sem_init(&sem, 0, 0);
 
     // Allocate arrays
     pthread_t threads[m];
     thread_arg_t args[m];
 
-    // Create m threads
+    // create m threads
     for (int i = 0; i < m; i++)
     {
         args[i].tid = i;
         args[i].start = i * chunk + 1;
         args[i].end = (i + 1) * chunk;
 
-        if (pthread_create(&threads[i], NULL, thread_func, &args[i]) != 0)
+        if (pthread_create(&threads[i], NULL, calc, &args[i]) != 0)
         {
             perror("pthread_create");
             exit(EXIT_FAILURE);
         }
     }
 
-    // Wait for all threads to signal completion via the semaphore
+    // wait for all threads to complete
     for (int i = 0; i < m; i++)
     {
         sem_wait(&sem);
     }
 
-    // Print the final total sum of square roots
+    // print final sum 
     printf("sum of square roots: %.6f\n", total);
 
-    // Destroy the semaphore
+    //destroy semaphore
     sem_destroy(&sem);
 
     return 0;
