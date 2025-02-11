@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     // Allocate arrays
     pthread_t threads[m];
     thread_arg_t args[m];
-
+    
     // create m threads
     for (int i = 0; i < m; i++)
     {
